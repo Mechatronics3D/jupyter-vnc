@@ -1,6 +1,8 @@
 FROM jupyter/datascience-notebook
 MAINTAINER Behzad Samadi <behzad@mechatronics3d.com>
 
+USER root
+
 # Install LXDE, VNC server, XRDP and Firefox
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   firefox \
