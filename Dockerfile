@@ -27,6 +27,14 @@ RUN pip3 install --upgrade pip
 # Update conda
 RUN conda update conda
 
+# Install LXDE, VNC server, XRDP and Firefox
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  firefox \
+  lxde-core \
+  lxterminal \
+  tightvncserver \
+  xrdp
+
 # Install Ipopt
 RUN mkdir $DL
 RUN wget http://www.coin-or.org/download/source/Ipopt/Ipopt-3.12.6.tgz -O $DL/Ipopt-3.12.6.tgz
@@ -70,5 +78,20 @@ RUN wget http://sourceforge.net/projects/casadi/files/CasADi/$CASADIVERSION/casa
 # Giving the ownership of the folders to the NB_USER
 RUN chown -R $NB_USER $WS
 RUN chown -R $NB_USER $DL
+
+# Open port 5901
+EXPOSE 5901
+
+# Set default password
+COPY password.txt .
+RUN cat password.txt password.txt | vncpasswd && \
+  rm password.txt
+  
+# Set XDRP to use TightVNC port
+RUN sed -i '0,/port=-1/{s/port=-1/port=5901/}' /etc/xrdp/xrdp.ini
+
+# Copy VNC script that handles restarts
+COPY vnc.sh /opt/
+CMD ["/opt/vnc.sh"]
 
 USER $NB_USER
