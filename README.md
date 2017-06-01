@@ -1,5 +1,5 @@
 # jupyter-vnc
-This container provides a Jupyter Notebook and a VNC server.
+This container provides a Jupyter Notebook and a VNC server. The VNC setup is taken from [vnc](https://hub.docker.com/r/kaixhin/vnc/).
 
 ## Usage
 You can run the container like this:
